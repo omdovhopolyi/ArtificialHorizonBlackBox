@@ -26,41 +26,26 @@
     <property name="currentIndex">
      <number>0</number>
     </property>
-    <widget class="QWidget" name="tab">
+    <widget class="QWidget" name="dataTab">
      <attribute name="title">
-      <string>Tab 1</string>
+      <string>Data</string>
      </attribute>
-     <widget class="QQuickWidget" name="quickWidget_2">
+     <widget class="QWidget" name="verticalLayoutWidget">
       <property name="geometry">
        <rect>
-        <x>-10</x>
-        <y>0</y>
-        <width>791</width>
-        <height>531</height>
+        <x>10</x>
+        <y>10</y>
+        <width>761</width>
+        <height>501</height>
        </rect>
       </property>
-      <property name="resizeMode">
-       <enum>QQuickWidget::SizeRootObjectToView</enum>
-      </property>
+      <layout class="QVBoxLayout" name="chartLayout"/>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_2">
+    <widget class="QWidget" name="viewTab">
      <attribute name="title">
-      <string>Tab 2</string>
+      <string>View</string>
      </attribute>
-     <widget class="QQuickWidget" name="quickWidget">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>781</width>
-        <height>531</height>
-       </rect>
-      </property>
-      <property name="resizeMode">
-       <enum>QQuickWidget::SizeRootObjectToView</enum>
-      </property>
-     </widget>
     </widget>
    </widget>
   </widget>
@@ -73,16 +58,15 @@
      <height>20</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuArtificial_Horizon_Black_Box">
+    <property name="title">
+     <string>Artificial Horizon Black Box</string>
+    </property>
+   </widget>
+   <addaction name="menuArtificial_Horizon_Black_Box"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QQuickWidget</class>
-   <extends>QWidget</extends>
-   <header location="global">QtQuickWidgets/QQuickWidget</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

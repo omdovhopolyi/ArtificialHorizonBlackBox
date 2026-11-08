@@ -17,6 +17,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+public slots:
+    void OnDataUpdated();
+
 private:
     Ui::MainWindow *ui;
 };
