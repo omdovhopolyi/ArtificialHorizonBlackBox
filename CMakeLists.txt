@@ -13,23 +13,23 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Charts)
 
 set(PROJECT_SOURCES
-        main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
+        src/main.cpp
+        src/mainwindow.cpp
+        src/mainwindow.h
+        src/mainwindow.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ArtificialHorizonBlackBox
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        maincontroller.h maincontroller.cpp
-        savemanager.h savemanager.cpp
-        datapoint.h
-        datareceiver.h datareceiver.cpp
-        dataprovider.h
-        uartdatareceiver.h uartdatareceiver.cpp
-        appconfig.h appconfig.cpp
+        src/maincontroller.h src/maincontroller.cpp
+        src/savemanager.h src/savemanager.cpp
+        src/datapoint.h
+        src/datareceiver.h src/datareceiver.cpp
+        src/dataprovider.h
+        src/uartdatareceiver.h src/uartdatareceiver.cpp
+        src/appconfig.h src/appconfig.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ArtificialHorizonBlackBox APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
