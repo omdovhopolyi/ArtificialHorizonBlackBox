@@ -30,7 +30,8 @@ signals:
 public slots:
     void Save();
     void Update();
-    void OnDataReceived();
+    void OnDataReceived(DataPoint dataPoint);
+    void StartReceiver(/*TODO type*/);
 
 private:
     void SetHasNewData(bool hasNew);

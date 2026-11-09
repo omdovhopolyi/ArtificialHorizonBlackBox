@@ -1,10 +1,11 @@
 #include "uartdatareceiver.h"
+#include "workers/uartdataworker.h"
 
 UARTDataReceiver::UARTDataReceiver(QObject *parent)
     : DataReceiver{parent}
 {}
 
-bool UARTDataReceiver::Init()
+DataWorker *UARTDataReceiver::CreateDataWorker()
 {
-    return false;
+    return new UARTDataWorker();
 }

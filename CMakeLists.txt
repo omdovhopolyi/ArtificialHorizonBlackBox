@@ -30,6 +30,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/dataprovider.h
         src/uartdatareceiver.h src/uartdatareceiver.cpp
         src/appconfig.h src/appconfig.cpp
+        src/workers/dataworker.h src/workers/dataworker.cpp
+        src/workers/uartdataworker.h src/workers/uartdataworker.cpp
+        src/workers/testdataworker.h src/workers/testdataworker.cpp
+        src/testdatareceiver.h src/testdatareceiver.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ArtificialHorizonBlackBox APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

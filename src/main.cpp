@@ -15,6 +15,8 @@ int main(int argc, char *argv[])
 
     QObject::connect(&mainController, &MainController::DataReceived, &mainWindow, &MainWindow::OnDataUpdated);
 
+    mainController.StartReceiver();
+
     mainWindow.show();
     return a.exec();
 }

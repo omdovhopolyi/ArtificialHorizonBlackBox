@@ -1,6 +1,7 @@
 #include "maincontroller.h"
 
-#include "uartdatareceiver.h"
+//#include "uartdatareceiver.h"
+#include "testdatareceiver.h"
 
 MainController::MainController(QObject *parent)
     : QObject{parent}
@@ -10,7 +11,6 @@ MainController::MainController(QObject *parent)
 
 void MainController::Init()
 {
-    _dataReceiver = QSharedPointer<UARTDataReceiver>::create();
     _saveManager.Init(this);
     _timer.start(_config.GetTimerDelay());
 }
@@ -38,9 +38,21 @@ void MainController::Update()
     }
 }
 
-void MainController::OnDataReceived()
+void MainController::OnDataReceived(DataPoint dataPoint)
 {
     SetHasNewData(true);
+}
+
+void MainController::StartReceiver()
+{
+    if (_dataReceiver) {
+        disconnect(_dataReceiver.data(), &DataReceiver::DataReceived, this, &MainController::OnDataReceived);
+    }
+
+    //_dataReceiver = QSharedPointer<UARTDataReceiver>::create();
+    _dataReceiver = QSharedPointer<TestDataReceiver>::create();
+    connect(_dataReceiver.get(), &DataReceiver::DataReceived, this, &MainController::OnDataReceived);
+    _dataReceiver->Start();
 }
 
 void MainController::SetHasNewData(bool hasNew)

@@ -49,22 +49,6 @@
     </widget>
    </widget>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>800</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuArtificial_Horizon_Black_Box">
-    <property name="title">
-     <string>Artificial Horizon Black Box</string>
-    </property>
-   </widget>
-   <addaction name="menuArtificial_Horizon_Black_Box"/>
-  </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>

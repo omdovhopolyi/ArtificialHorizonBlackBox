@@ -61,6 +61,11 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::SetDataProvider(const IDataProvider *dataProvider)
+{
+    _dataProvider = dataProvider;
+}
+
 void MainWindow::OnDataUpdated()
 {
 

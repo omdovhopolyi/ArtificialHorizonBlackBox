@@ -9,7 +9,8 @@ class UARTDataReceiver
 public:
     explicit UARTDataReceiver(QObject *parent = nullptr);
 
-    bool Init() override;
+protected:
+    DataWorker* CreateDataWorker() override;
 };
 
 #endif // UARTDATARECEIVER_H
