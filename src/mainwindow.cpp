@@ -15,6 +15,11 @@ MainWindow::MainWindow(AppConfig* config, QWidget *parent)
     ui->setupUi(this);
 
     InitSeries();
+    InitGraphicsView();
+
+    //_debugTimer.start(100);
+
+    //connect(&_debugTimer, &QTimer::timeout, this, &MainWindow::OnDebugTimer);
 }
 
 MainWindow::~MainWindow()
@@ -32,23 +37,21 @@ void MainWindow::OnDataUpdated()
     if (_dataProvider) {
         const auto& dataPoints = _dataProvider->GetData();
         if (!dataPoints.empty()) {
-
-            if (_pitchSeries->count() > _config->GetTimeRange()) {
-                _pitchSeries->remove(0);
-                _rollSeries->remove(0);
-            }
-
             const auto& lastPoint = dataPoints.back();
-            _pitchSeries->append(lastPoint.timestamp, lastPoint.pitch);
-            _rollSeries->append(lastPoint.timestamp, lastPoint.roll);
 
-            const auto& firstPoint = _pitchSeries->points().front();
-            const auto xValueStart = static_cast<int>(firstPoint.x());
-            const auto xValueEnd = xValueStart + _config->GetTimeRange();
+            UpdateChart(lastPoint);
+            UpdateGraphicsView(lastPoint);
 
-            _axisX->setRange(xValueStart, xValueEnd);
+
         }
     }
+}
+
+void MainWindow::OnDebugTimer()
+{
+    auto rotation = _artificialHorizonPixmap->rotation();
+    rotation += 1.f;
+    _artificialHorizonPixmap->setRotation(rotation);
 }
 
 void MainWindow::InitSeries()
@@ -84,4 +87,44 @@ void MainWindow::InitSeries()
     _chartView->setRenderHint(QPainter::Antialiasing);
 
     ui->ChartLayout->addWidget(_chartView);
+}
+
+void MainWindow::InitGraphicsView()
+{
+    auto* scene = new QGraphicsScene(this);
+
+    _artificialHorizonPixmap = scene->addPixmap(
+        QPixmap(":/images/assets/ahtest.png")
+        );
+
+    ui->ArtificialHorizonView->setScene(scene);
+
+    _artificialHorizonPixmap->setTransformOriginPoint(
+        _artificialHorizonPixmap->boundingRect().center()
+    );
+
+    //_artificialHorizonPixmap->setRotation(45);
+    //_artificialHorizonPixmap->setScale(2.0);
+}
+
+void MainWindow::UpdateChart(const DataPoint &point)
+{
+    if (_pitchSeries->count() > _config->GetTimeRange()) {
+        _pitchSeries->remove(0);
+        _rollSeries->remove(0);
+    }
+
+    _pitchSeries->append(point.timestamp, point.pitch);
+    _rollSeries->append(point.timestamp, point.roll);
+
+    const auto& firstPoint = _pitchSeries->points().front();
+    const auto xValueStart = static_cast<int>(firstPoint.x());
+    const auto xValueEnd = xValueStart + _config->GetTimeRange();
+
+    _axisX->setRange(xValueStart, xValueEnd);
+}
+
+void MainWindow::UpdateGraphicsView(const DataPoint &point)
+{
+    _artificialHorizonPixmap->setRotation(point.roll);
 }

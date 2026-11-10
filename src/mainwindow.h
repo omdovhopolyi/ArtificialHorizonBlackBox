@@ -8,6 +8,8 @@
 #include <QtCharts/QValueAxis>
 #include <QSharedPointer>
 
+#include <QTimer>
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -16,6 +18,7 @@ QT_END_NAMESPACE
 
 class AppConfig;
 class IDataProvider;
+struct DataPoint;
 
 class MainWindow : public QMainWindow
 {
@@ -29,9 +32,14 @@ public:
 
 public slots:
     void OnDataUpdated();
+    void OnDebugTimer();
 
 private:
     void InitSeries();
+    void InitGraphicsView();
+
+    void UpdateChart(const DataPoint& point);
+    void UpdateGraphicsView(const DataPoint& point);
 
 private:
     Ui::MainWindow *ui;
@@ -44,6 +52,10 @@ private:
     QValueAxis* _axisY = nullptr;
     QChartView* _chartView = nullptr;
 
+    QGraphicsPixmapItem* _artificialHorizonPixmap = nullptr;
+
     const IDataProvider* _dataProvider = nullptr;
+
+    QTimer _debugTimer;
 };
 #endif // MAINWINDOW_H
