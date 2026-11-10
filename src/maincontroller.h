@@ -8,7 +8,8 @@
 #include "datareceiver.h"
 #include "savemanager.h"
 #include "dataprovider.h"
-#include "appconfig.h"
+
+class AppConfig;
 
 class MainController
     : public QObject
@@ -18,7 +19,7 @@ class MainController
 public:
     explicit MainController(QObject *parent = nullptr);
 
-    void Init();
+    void Init(const AppConfig* config);
 
     const std::vector<DataPoint>& GetData() const override;
 
@@ -39,9 +40,10 @@ private:
 private:
     QSharedPointer<DataReceiver> _dataReceiver;
     SaveManager _saveManager;
-    AppConfig _config;
+    const AppConfig* _config = nullptr;
 
     std::vector<DataPoint> _dataPoints;
+    std::vector<DataPoint> _pendingPoints;
 
     QTimer _timer;
     bool _hasNewData = false;

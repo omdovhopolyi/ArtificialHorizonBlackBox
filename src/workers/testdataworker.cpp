@@ -12,7 +12,7 @@ TestDataWorker::TestDataWorker(QObject *parent)
 
 void TestDataWorker::OnStart()
 {
-    _timer.start(2000);
+    _timer.start(1000);
     _startTime = std::chrono::system_clock::now();
 }
 
@@ -22,7 +22,7 @@ void TestDataWorker::OnTimer()
 
     std::random_device rd;
     std::mt19937 mt19937(rd());
-    std::uniform_real_distribution<> dist(0, 90);
+    std::uniform_real_distribution<> dist(0, 30);
 
     dataPoint.pitch = dist(mt19937);
     dataPoint.roll = dist(mt19937);

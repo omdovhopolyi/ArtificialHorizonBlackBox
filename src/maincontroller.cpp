@@ -1,5 +1,5 @@
 #include "maincontroller.h"
-
+#include "appconfig.h"
 //#include "uartdatareceiver.h"
 #include "testdatareceiver.h"
 
@@ -9,10 +9,12 @@ MainController::MainController(QObject *parent)
     connect(&_timer, &QTimer::timeout, this, &MainController::Update);
 }
 
-void MainController::Init()
+void MainController::Init(const AppConfig* config)
 {
+    Q_ASSERT(config);
+    _config = config;
     _saveManager.Init(this);
-    _timer.start(_config.GetTimerDelay());
+    _timer.start(_config->GetTimerDelay());
 }
 
 const std::vector<DataPoint> &MainController::GetData() const
@@ -41,6 +43,7 @@ void MainController::Update()
 void MainController::OnDataReceived(DataPoint dataPoint)
 {
     SetHasNewData(true);
+    _dataPoints.push_back(std::move(dataPoint));
 }
 
 void MainController::StartReceiver()

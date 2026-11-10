@@ -1,59 +1,20 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include <QtCharts/QChart>
-#include <QtCharts/QChartView>
-#include <QtCharts/QLineSeries>
-#include <QtCharts/QValueAxis>
 #include <QVBoxLayout>
 
-MainWindow::MainWindow(QWidget *parent)
+#include "dataprovider.h"
+#include "appconfig.h"
+
+MainWindow::MainWindow(AppConfig* config, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , _config(config)
 {
+    Q_ASSERT(_config);
+
     ui->setupUi(this);
 
-    // Create a series
-    auto* series = new QLineSeries();
-    series->setName("First");
-
-    series->append(0, 10);
-    series->append(1, 20);
-    series->append(2, 15);
-    series->append(3, 30);
-
-    auto* series2 = new QLineSeries();
-    series2->setName("Second");
-
-    series2->append(0, 15);
-    series2->append(1, 25);
-    series2->append(2, 20);
-    series2->append(3, 30);
-
-    auto* chart = new QChart();
-    chart->addSeries(series);
-    chart->addSeries(series2);
-
-    auto* axisX = new QValueAxis();
-    axisX->setRange(0, 5);
-    axisX->setTitleText("X");
-
-    auto* axisY = new QValueAxis();
-    axisY->setRange(0, 30);
-    axisY->setTitleText("Y");
-
-    chart->addAxis(axisX, Qt::AlignBottom);
-    chart->addAxis(axisY, Qt::AlignLeft);
-
-    series->attachAxis(axisX);
-    series->attachAxis(axisY);
-
-    series2->attachAxis(axisX);
-    series2->attachAxis(axisY);
-
-    auto* chartView = new QChartView(chart);
-    chartView->setRenderHint(QPainter::Antialiasing);
-
-    ui->ChartLayout->addWidget(chartView);
+    InitSeries();
 }
 
 MainWindow::~MainWindow()
@@ -68,5 +29,59 @@ void MainWindow::SetDataProvider(const IDataProvider *dataProvider)
 
 void MainWindow::OnDataUpdated()
 {
+    if (_dataProvider) {
+        const auto& dataPoints = _dataProvider->GetData();
+        if (!dataPoints.empty()) {
 
+            if (_pitchSeries->count() > _config->GetTimeRange()) {
+                _pitchSeries->remove(0);
+                _rollSeries->remove(0);
+            }
+
+            const auto& lastPoint = dataPoints.back();
+            _pitchSeries->append(lastPoint.timestamp, lastPoint.pitch);
+            _rollSeries->append(lastPoint.timestamp, lastPoint.roll);
+
+            const auto& firstPoint = _pitchSeries->points().front();
+            const auto xValueStart = static_cast<int>(firstPoint.x());
+            const auto xValueEnd = xValueStart + _config->GetTimeRange();
+
+            _axisX->setRange(xValueStart, xValueEnd);
+        }
+    }
+}
+
+void MainWindow::InitSeries()
+{
+    _pitchSeries = new QLineSeries();
+    _pitchSeries->setName(_config->GetPitchSeriesName());
+
+    _rollSeries = new QLineSeries();
+    _rollSeries->setName(_config->GetRollSeriesName());
+
+    _chart = new QChart();
+    _chart->addSeries(_pitchSeries);
+    _chart->addSeries(_rollSeries);
+
+    _axisX = new QValueAxis();
+    _axisX->setRange(0, _config->GetTimeRange());
+    _axisX->setTitleText(_config->GetTimeAxisName());
+
+    _axisY = new QValueAxis();
+    _axisY->setRange(0, _config->GetValueRange());
+    _axisY->setTitleText(_config->GetValueAxisName());
+
+    _chart->addAxis(_axisX, Qt::AlignBottom);
+    _chart->addAxis(_axisY, Qt::AlignLeft);
+
+    _pitchSeries->attachAxis(_axisX);
+    _pitchSeries->attachAxis(_axisY);
+
+    _rollSeries->attachAxis(_axisX);
+    _rollSeries->attachAxis(_axisY);
+
+    _chartView = new QChartView(_chart);
+    _chartView->setRenderHint(QPainter::Antialiasing);
+
+    ui->ChartLayout->addWidget(_chartView);
 }
