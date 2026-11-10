@@ -55,7 +55,14 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_5">
       <item>
-       <widget class="QGraphicsView" name="ArtificialHorizonView"/>
+       <widget class="QGraphicsView" name="ArtificialHorizonView">
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QPushButton" name="StartSessonButton">

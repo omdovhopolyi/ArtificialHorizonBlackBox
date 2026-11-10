@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/images">
-        <file>assets/ahtest.png</file>
+        <file>assets/ah_back_30.png</file>
+        <file>assets/ah_back_20.png</file>
+        <file>assets/ah_target.png</file>
     </qresource>
 </RCC>

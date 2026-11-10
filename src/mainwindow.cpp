@@ -41,8 +41,6 @@ void MainWindow::OnDataUpdated()
 
             UpdateChart(lastPoint);
             UpdateGraphicsView(lastPoint);
-
-
         }
     }
 }
@@ -94,13 +92,19 @@ void MainWindow::InitGraphicsView()
     auto* scene = new QGraphicsScene(this);
 
     _artificialHorizonPixmap = scene->addPixmap(
-        QPixmap(":/images/assets/ahtest.png")
-        );
+        QPixmap(":/images/assets/ah_back_20.png")
+    );
+
+    auto pixmapTarget = scene->addPixmap(QPixmap(":/images/assets/ah_target.png"));
 
     ui->ArtificialHorizonView->setScene(scene);
 
     _artificialHorizonPixmap->setTransformOriginPoint(
         _artificialHorizonPixmap->boundingRect().center()
+    );
+
+    pixmapTarget->setTransformOriginPoint(
+        pixmapTarget->boundingRect().center()
     );
 
     //_artificialHorizonPixmap->setRotation(45);
