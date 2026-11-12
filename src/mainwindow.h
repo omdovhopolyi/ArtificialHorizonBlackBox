@@ -30,6 +30,11 @@ public:
 
     void SetDataProvider(const IDataProvider* dataProvider);
 
+signals:
+    void StartSession();
+    void StopSession();
+    void RunSession(QString filename);
+
 public slots:
     void OnDataUpdated();
     void OnDebugTimer();
@@ -40,6 +45,11 @@ private:
 
     void UpdateChart(const DataPoint& point);
     void UpdateGraphicsView(const DataPoint& point);
+
+    void OnStartSessionClicked();
+    void OnStopSessionClicked();
+    void OnRunSessionClicked();
+    void OnSessionSelectorClicked();
 
 private:
     Ui::MainWindow *ui;

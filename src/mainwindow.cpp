@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include <QVBoxLayout>
+#include <QFileDialog>
 
 #include "dataprovider.h"
 #include "appconfig.h"
@@ -20,6 +21,11 @@ MainWindow::MainWindow(AppConfig* config, QWidget *parent)
     //_debugTimer.start(100);
 
     //connect(&_debugTimer, &QTimer::timeout, this, &MainWindow::OnDebugTimer);
+
+    connect(ui->StartSessonButton, &QPushButton::released, this, &MainWindow::OnStartSessionClicked);
+    connect(ui->StopSessionButton, &QPushButton::released, this, &MainWindow::OnStopSessionClicked);
+    connect(ui->RunSessionButton, &QPushButton::released, this, &MainWindow::OnRunSessionClicked);
+    connect(ui->ChooseFileButton, &QPushButton::released, this, &MainWindow::OnSessionSelectorClicked);
 }
 
 MainWindow::~MainWindow()
@@ -131,4 +137,29 @@ void MainWindow::UpdateChart(const DataPoint &point)
 void MainWindow::UpdateGraphicsView(const DataPoint &point)
 {
     _artificialHorizonPixmap->setRotation(point.roll);
+}
+
+void MainWindow::OnStartSessionClicked()
+{
+    emit StartSession();
+}
+
+void MainWindow::OnStopSessionClicked()
+{
+    emit StopSession();
+}
+
+void MainWindow::OnRunSessionClicked()
+{
+    QString filename = ui->FileNameView->text();
+    emit RunSession(filename);
+}
+
+void MainWindow::OnSessionSelectorClicked()
+{
+    QString filePath = QFileDialog::getOpenFileName(this, "Select session");
+    if (!filePath.isEmpty()) {
+        QString filename = QFileInfo(filePath).fileName();
+        ui->FileNameView->setText(filename);
+    }
 }
