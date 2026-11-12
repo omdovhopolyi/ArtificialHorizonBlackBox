@@ -4,64 +4,26 @@
 //#include "testdatareceiver.h"
 #include "Modes/testmode.h"
 #include "Modes/savemode.h"
+#include "workers/saveworker.h"
 
 MainController::MainController(QObject *parent)
     : QObject{parent}
-{
-    connect(&_timer, &QTimer::timeout, this, &MainController::Update);
-}
+{}
 
 void MainController::Init(const AppConfig* config)
 {
     Q_ASSERT(config);
     _config = config;
-    _saveManager.Init(this);
-    _timer.start(_config->GetTimerDelay());
-}
-
-const std::vector<DataPoint> &MainController::GetData() const
-{
-    return _dataPoints;
-}
-
-bool MainController::HasNewData() const
-{
-    return _hasNewData;
-}
-
-void MainController::Save()
-{
-    _saveManager.Save();
-}
-
-void MainController::Update()
-{
-    // if (HasNewData()) {
-    //     emit DataReceived();
-    //     SetHasNewData(false);
-    // }
-}
-
-void MainController::OnDataReceived(DataPoint dataPoint)
-{
-    SetHasNewData(true);
-    _dataPoints.push_back(std::move(dataPoint));
-}
-
-void MainController::StartReceiver()
-{
-    // if (_dataReceiver) {
-    //     disconnect(_dataReceiver.data(), &DataReceiver::DataReceived, this, &MainController::OnDataReceived);
-    // }
-
-    // //_dataReceiver = QSharedPointer<UARTDataReceiver>::create();
-    // _dataReceiver = QSharedPointer<TestDataReceiver>::create();
-    // connect(_dataReceiver.get(), &DataReceiver::DataReceived, this, &MainController::OnDataReceived);
-    // _dataReceiver->Start();
+    //_saveManager.Init(this);
 }
 
 void MainController::BeforeAppClosed()
 {
+    if (_saveThread) {
+        _saveThread->exit();
+        _saveThread->wait();
+    }
+
     if (_mode) {
         _mode->Stop();
     }
@@ -71,14 +33,35 @@ void MainController::StartSession()
 {
     _mode = QSharedPointer<TestMode>::create();
 
+    _saveThread = QSharedPointer<QThread>::create();
+    auto saveWorker = new SaveWorker();
+    saveWorker->moveToThread(_saveThread.get());
+
+
     connect(_mode.get(), &BaseMode::DataReceived, this, &MainController::DataReceived);
+    //connect(_mode.get(), &BaseMode::DataReceived, &_saveManager, &SaveManager::DataReceived);
+
+    connect(_mode.get(), &BaseMode::DataReceived, saveWorker, &SaveWorker::OnDataReceived);
+    connect(_saveThread.get(), &QThread::started, saveWorker, &SaveWorker::OnStart);
+    connect(_saveThread.get(), &QThread::finished, saveWorker, &SaveWorker::OnStop);
+    connect(_saveThread.get(), &QThread::finished, saveWorker, &QObject::deleteLater);
 
     _mode->Start();
+    _saveThread->start();
 }
 
 void MainController::StopSession()
 {
-    _mode->Stop();
+    if (_saveThread) {
+        _saveThread->exit();
+        _saveThread->wait();
+        _saveThread.reset();
+    }
+
+    if (_mode) {
+        _mode->Stop();
+        _mode.reset();
+    }
 }
 
 void MainController::RunSession(QString filename)
@@ -88,9 +71,4 @@ void MainController::RunSession(QString filename)
     }
     _mode = QSharedPointer<SaveMode>::create();
     _mode->Start();
-}
-
-void MainController::SetHasNewData(bool hasNew)
-{
-    _hasNewData = hasNew;
 }

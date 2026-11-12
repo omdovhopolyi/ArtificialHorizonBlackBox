@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     MainWindow mainWindow{ &config };
 
     mainController.Init(&config);
-    mainWindow.SetDataProvider(&mainController);
+    mainWindow.SetDataProvider(nullptr);
 
     QObject::connect(&app, &QApplication::aboutToQuit, &mainController, &MainController::BeforeAppClosed);
 

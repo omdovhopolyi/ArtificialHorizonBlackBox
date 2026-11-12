@@ -7,7 +7,7 @@
 struct DataPoint {
     float pitch = 0.f;
     float roll = 0.f;
-    uint32_t timestamp;
+    float timestamp = 0.f;
 };
 
 #endif // DATAPOINT_H

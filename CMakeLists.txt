@@ -26,7 +26,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/maincontroller.h src/maincontroller.cpp
         src/savemanager.h src/savemanager.cpp
         src/datapoint.h
-        src/datareceiver.h src/datareceiver.cpp
+
         src/dataprovider.h
         src/uartdatareceiver.h src/uartdatareceiver.cpp
         src/appconfig.h src/appconfig.cpp
@@ -39,6 +39,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/Modes/uartmode.h src/Modes/uartmode.cpp
         src/Modes/savemode.h src/Modes/savemode.cpp
         src/Modes/testmode.h src/Modes/testmode.cpp
+        src/workers/saveworker.h src/workers/saveworker.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ArtificialHorizonBlackBox APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

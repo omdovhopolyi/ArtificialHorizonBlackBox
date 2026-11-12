@@ -2,6 +2,8 @@
 #define SAVEMANAGER_H
 
 #include <QObject>
+#include <QThread>
+#include "datapoint.h"
 
 class IDataProvider;
 
@@ -17,8 +19,13 @@ public:
 
 signals:
     void Loaded();
+    void DataReceived(DataPoint point);
 
 public slots:
+    void OnSessionStart();
+    void OnSessionStop();
+    void OnSessionRun(QString filename);
+
     void Save();
 
 private:
