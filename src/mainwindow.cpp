@@ -22,6 +22,7 @@ MainWindow::MainWindow(AppConfig* config, QWidget *parent)
 
     //connect(&_debugTimer, &QTimer::timeout, this, &MainWindow::OnDebugTimer);
 
+    // TODO signal forwarding
     connect(ui->StartSessonButton, &QPushButton::released, this, &MainWindow::OnStartSessionClicked);
     connect(ui->StopSessionButton, &QPushButton::released, this, &MainWindow::OnStopSessionClicked);
     connect(ui->RunSessionButton, &QPushButton::released, this, &MainWindow::OnRunSessionClicked);
@@ -38,17 +39,23 @@ void MainWindow::SetDataProvider(const IDataProvider *dataProvider)
     _dataProvider = dataProvider;
 }
 
+void MainWindow::OnNewPoint(DataPoint point)
+{
+    UpdateChart(point);
+    UpdateGraphicsView(point);
+}
+
 void MainWindow::OnDataUpdated()
 {
-    if (_dataProvider) {
-        const auto& dataPoints = _dataProvider->GetData();
-        if (!dataPoints.empty()) {
-            const auto& lastPoint = dataPoints.back();
+    // if (_dataProvider) {
+    //     const auto& dataPoints = _dataProvider->GetData();
+    //     if (!dataPoints.empty()) {
+    //         const auto& lastPoint = dataPoints.back();
 
-            UpdateChart(lastPoint);
-            UpdateGraphicsView(lastPoint);
-        }
-    }
+    //         UpdateChart(lastPoint);
+    //         UpdateGraphicsView(lastPoint);
+    //     }
+    // }
 }
 
 void MainWindow::OnDebugTimer()
@@ -112,9 +119,6 @@ void MainWindow::InitGraphicsView()
     pixmapTarget->setTransformOriginPoint(
         pixmapTarget->boundingRect().center()
     );
-
-    //_artificialHorizonPixmap->setRotation(45);
-    //_artificialHorizonPixmap->setScale(2.0);
 }
 
 void MainWindow::UpdateChart(const DataPoint &point)

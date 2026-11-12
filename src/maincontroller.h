@@ -8,6 +8,7 @@
 #include "datareceiver.h"
 #include "savemanager.h"
 #include "dataprovider.h"
+#include "Modes/basemode.h"
 
 class AppConfig;
 
@@ -26,7 +27,7 @@ public:
     bool HasNewData() const;
 
 signals:
-    void DataReceived();
+    void DataReceived(DataPoint dataPoint);
 
 public slots:
     void Save();
@@ -34,11 +35,18 @@ public slots:
     void OnDataReceived(DataPoint dataPoint);
     void StartReceiver(/*TODO type*/);
 
+    void BeforeAppClosed();
+
+    void StartSession();
+    void StopSession();
+    void RunSession(QString filename);
+
 private:
     void SetHasNewData(bool hasNew);
 
 private:
     QSharedPointer<DataReceiver> _dataReceiver;
+    QSharedPointer<BaseMode> _mode;
     SaveManager _saveManager;
     const AppConfig* _config = nullptr;
 

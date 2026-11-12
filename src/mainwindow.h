@@ -36,6 +36,7 @@ signals:
     void RunSession(QString filename);
 
 public slots:
+    void OnNewPoint(DataPoint point);
     void OnDataUpdated();
     void OnDebugTimer();
 

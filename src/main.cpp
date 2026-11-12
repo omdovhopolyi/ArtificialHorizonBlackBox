@@ -7,7 +7,7 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QApplication app(argc, argv);
 
     AppConfig config;
     MainController mainController;
@@ -16,10 +16,12 @@ int main(int argc, char *argv[])
     mainController.Init(&config);
     mainWindow.SetDataProvider(&mainController);
 
-    QObject::connect(&mainController, &MainController::DataReceived, &mainWindow, &MainWindow::OnDataUpdated);
+    QObject::connect(&app, &QApplication::aboutToQuit, &mainController, &MainController::BeforeAppClosed);
 
-    mainController.StartReceiver();
+    QObject::connect(&mainController, &MainController::DataReceived, &mainWindow, &MainWindow::OnNewPoint);
+    QObject::connect(&mainWindow, &MainWindow::StartSession, &mainController, &MainController::StartSession);
+    QObject::connect(&mainWindow, &MainWindow::StopSession, &mainController, &MainController::StopSession);
 
     mainWindow.show();
-    return a.exec();
+    return app.exec();
 }

@@ -1,7 +1,9 @@
 #include "maincontroller.h"
 #include "appconfig.h"
 //#include "uartdatareceiver.h"
-#include "testdatareceiver.h"
+//#include "testdatareceiver.h"
+#include "Modes/testmode.h"
+#include "Modes/savemode.h"
 
 MainController::MainController(QObject *parent)
     : QObject{parent}
@@ -34,10 +36,10 @@ void MainController::Save()
 
 void MainController::Update()
 {
-    if (HasNewData()) {
-        emit DataReceived();
-        SetHasNewData(false);
-    }
+    // if (HasNewData()) {
+    //     emit DataReceived();
+    //     SetHasNewData(false);
+    // }
 }
 
 void MainController::OnDataReceived(DataPoint dataPoint)
@@ -48,14 +50,44 @@ void MainController::OnDataReceived(DataPoint dataPoint)
 
 void MainController::StartReceiver()
 {
-    if (_dataReceiver) {
-        disconnect(_dataReceiver.data(), &DataReceiver::DataReceived, this, &MainController::OnDataReceived);
-    }
+    // if (_dataReceiver) {
+    //     disconnect(_dataReceiver.data(), &DataReceiver::DataReceived, this, &MainController::OnDataReceived);
+    // }
 
-    //_dataReceiver = QSharedPointer<UARTDataReceiver>::create();
-    _dataReceiver = QSharedPointer<TestDataReceiver>::create();
-    connect(_dataReceiver.get(), &DataReceiver::DataReceived, this, &MainController::OnDataReceived);
-    _dataReceiver->Start();
+    // //_dataReceiver = QSharedPointer<UARTDataReceiver>::create();
+    // _dataReceiver = QSharedPointer<TestDataReceiver>::create();
+    // connect(_dataReceiver.get(), &DataReceiver::DataReceived, this, &MainController::OnDataReceived);
+    // _dataReceiver->Start();
+}
+
+void MainController::BeforeAppClosed()
+{
+    if (_mode) {
+        _mode->Stop();
+    }
+}
+
+void MainController::StartSession()
+{
+    _mode = QSharedPointer<TestMode>::create();
+
+    connect(_mode.get(), &BaseMode::DataReceived, this, &MainController::DataReceived);
+
+    _mode->Start();
+}
+
+void MainController::StopSession()
+{
+    _mode->Stop();
+}
+
+void MainController::RunSession(QString filename)
+{
+    if (_mode) {
+        _mode->Stop();
+    }
+    _mode = QSharedPointer<SaveMode>::create();
+    _mode->Start();
 }
 
 void MainController::SetHasNewData(bool hasNew)
