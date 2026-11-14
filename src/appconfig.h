@@ -9,7 +9,6 @@ public:
     AppConfig();
 
     int GetTimerDelay() const;
-    void SetTimerDelay(int delay);
 
     int GetTimeRange() const;
     int GetValueRange();
@@ -19,6 +18,9 @@ public:
 
     QString GetTimeAxisName() const;
     QString GetValueAxisName() const;
+
+    int GetRunModeTimerDelay() const;
+    int GetRunModePageSize() const;
 private:
     QSettings _settings;
 };

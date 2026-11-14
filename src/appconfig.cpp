@@ -7,11 +7,6 @@ int AppConfig::GetTimerDelay() const
     return 1000;
 }
 
-void AppConfig::SetTimerDelay(int delay)
-{
-
-}
-
 int AppConfig::GetTimeRange() const
 {
     return 10;
@@ -40,4 +35,14 @@ QString AppConfig::GetTimeAxisName() const
 QString AppConfig::GetValueAxisName() const
 {
     return "Value";
+}
+
+int AppConfig::GetRunModeTimerDelay() const
+{
+    return 33;
+}
+
+int AppConfig::GetRunModePageSize() const
+{
+    return 100;
 }

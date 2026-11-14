@@ -1,9 +1,9 @@
 #include "saveworker.h"
 #include <QDateTime>
-#include <QTextStream>
 
 SaveWorker::SaveWorker(QObject *parent)
     : QObject{parent}
+    , _stream(&_file)
 {}
 
 void SaveWorker::OnStart()
@@ -16,8 +16,8 @@ void SaveWorker::OnStart()
         qDebug() << _file.errorString();
         return;
     }
-    _timer = QSharedPointer<QTimer>::create();
-    _timer->start(100); // TODO config
+    //_timer = QSharedPointer<QTimer>::create();
+    //_timer->start(100); // TODO config
 }
 
 void SaveWorker::OnStop()
@@ -30,8 +30,8 @@ void SaveWorker::OnDataReceived(DataPoint point)
     if (!_file.isOpen()) {
         return;
     }
-    QTextStream stream(&_file);
-    stream << point.pitch << ';' << point.roll << ';' <<  point.timestamp << '\n';
-    stream.flush();
+    //QTextStream stream(&_file);
+    _stream << point.pitch << ';' << point.roll << ';' <<  point.timestamp << '\n';
+    _stream.flush();
     _file.flush();
 }

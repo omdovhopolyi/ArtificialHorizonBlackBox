@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QSharedPointer>
 #include <QTimer>
+#include <QTextStream>
 #include "../datapoint.h"
 
 class SaveWorker : public QObject
@@ -23,6 +24,7 @@ public slots:
 private:
     QSharedPointer<QTimer> _timer;
     QFile _file;
+    QTextStream _stream;
 };
 
 #endif // SAVEWORKER_H

@@ -33,6 +33,8 @@ public slots:
     void RunSession(QString filename);
 
 private:
+    void InitSessionMode();
+    void InitRunMode(QString filename);
     void StopSaveThread();
     void StopCurrentMode();
 

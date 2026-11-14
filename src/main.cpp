@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
     QObject::connect(&mainController, &MainController::DataReceived, &mainWindow, &MainWindow::OnNewPoint);
     QObject::connect(&mainWindow, &MainWindow::StartSession, &mainController, &MainController::StartSession);
     QObject::connect(&mainWindow, &MainWindow::StopSession, &mainController, &MainController::StopSession);
+    QObject::connect(&mainWindow, &MainWindow::RunSession, &mainController, &MainController::RunSession);
 
     mainWindow.show();
     return app.exec();
