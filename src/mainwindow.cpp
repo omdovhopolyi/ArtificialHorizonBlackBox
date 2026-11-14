@@ -4,8 +4,9 @@
 #include <QFileDialog>
 
 #include "appconfig.h"
+#include "datapoint.h"
 
-MainWindow::MainWindow(const AppConfig* config, QWidget *parent)
+MainWindow::MainWindow(const ah::AppConfig* config, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , _config(config)
@@ -28,7 +29,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::OnNewPoint(DataPoint point)
+void MainWindow::OnNewPoint(ah::DataPoint point)
 {
     UpdateChart(point);
     UpdateGraphicsView(point);
@@ -85,7 +86,7 @@ void MainWindow::InitGraphicsView()
     ui->ArtificialHorizonView->setScene(scene);
 }
 
-void MainWindow::UpdateChart(const DataPoint &point)
+void MainWindow::UpdateChart(const ah::DataPoint &point)
 {
     const auto rangeMax =_axisX->max();
     const bool needMoveTimeRange = (_pitchSeries->count() > 0 && point.timestamp >= rangeMax);
@@ -100,7 +101,7 @@ void MainWindow::UpdateChart(const DataPoint &point)
     _rollSeries->append(point.timestamp, point.roll);
 }
 
-void MainWindow::UpdateGraphicsView(const DataPoint &point)
+void MainWindow::UpdateGraphicsView(const ah::DataPoint &point)
 {
     const float pitchCorrected = std::min(point.pitch, _config->GetMaxPitch());
     const float pitch = (_config->PixelsPer10Degrees() * (pitchCorrected / 10.f));

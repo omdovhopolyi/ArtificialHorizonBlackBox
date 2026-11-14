@@ -4,18 +4,21 @@
 #include <QObject>
 #include "../datapoint.h"
 
-class BaseMode : public QObject
-{
-    Q_OBJECT
-public:
-    explicit BaseMode(QObject *parent = nullptr);
-    virtual ~BaseMode();
+namespace ah {
 
-    virtual void Start() = 0;
-    virtual void Stop() = 0;
+    class BaseMode : public QObject
+    {
+        Q_OBJECT
+    public:
+        explicit BaseMode(QObject *parent = nullptr);
+        virtual ~BaseMode();
 
-signals:
-    void DataReceived(DataPoint point);
-};
+        virtual void Start() = 0;
+        virtual void Stop() = 0;
+
+    signals:
+        void DataReceived(DataPoint point);
+    };
+}
 
 #endif // BASEMODE_H

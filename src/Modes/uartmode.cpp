@@ -1,5 +1,7 @@
 #include "uartmode.h"
 
-UARTMode::UARTMode(QObject *parent)
-    : BaseMode{parent}
-{}
+namespace ah {
+    UARTMode::UARTMode(QObject *parent)
+        : BaseMode{parent}
+    {}
+}

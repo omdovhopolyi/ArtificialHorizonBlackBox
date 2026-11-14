@@ -1,7 +1,9 @@
 #include "basemode.h"
 
-BaseMode::BaseMode(QObject *parent)
-    : QObject{parent}
-{}
+namespace ah {
+    BaseMode::BaseMode(QObject *parent)
+        : QObject{parent}
+    {}
 
-BaseMode::~BaseMode() = default;
+    BaseMode::~BaseMode() = default;
+}

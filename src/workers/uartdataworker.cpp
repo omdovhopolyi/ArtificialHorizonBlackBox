@@ -1,10 +1,12 @@
 #include "uartdataworker.h"
 
-UARTDataWorker::UARTDataWorker(QObject *parent)
-    : QObject{parent}
-{}
+namespace ah {
+    UARTDataWorker::UARTDataWorker(QObject *parent)
+        : QObject{parent}
+    {}
 
-void UARTDataWorker::OnStart()
-{
+    void UARTDataWorker::OnStart()
+    {
 
+    }
 }

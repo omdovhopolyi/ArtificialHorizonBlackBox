@@ -9,42 +9,44 @@
 #include <chrono>
 #include "../datapoint.h"
 
-class AppConfig;
+namespace ah {
+    class AppConfig;
 
-class RunWorker : public QObject
-{
-    Q_OBJECT
-public:
-    explicit RunWorker(QString filename, const AppConfig* config, QObject *parent = nullptr);
+    class RunWorker : public QObject
+    {
+        Q_OBJECT
+    public:
+        explicit RunWorker(QString filename, const AppConfig* config, QObject *parent = nullptr);
 
-signals:
-    void PointReached(DataPoint point);
+    signals:
+        void PointReached(DataPoint point);
 
-public slots:
-    void OnStart();
-    void OnTimer();
+    public slots:
+        void OnStart();
+        void OnTimer();
 
-private:
-    void OpenFile();
-    void LoadPage();
-    void StartTimer();
+    private:
+        void OpenFile();
+        void LoadPage();
+        void StartTimer();
 
-    float CalculateTimePassed() const;
-    void EmitReachedPoints(float timestamp);
-    void CheckAndLoadNextPage();
+        float CalculateTimePassed() const;
+        void EmitReachedPoints(float timestamp);
+        void CheckAndLoadNextPage();
 
-private:
-    QSharedPointer<QTimer> _updateTimer;
-    QString _filename;
-    const AppConfig* _config = nullptr;
+    private:
+        QSharedPointer<QTimer> _updateTimer;
+        QString _filename;
+        const AppConfig* _config = nullptr;
 
-    QFile _file;
+        QFile _file;
 
-    int _recordIndex = 0;
+        int _recordIndex = 0;
 
-    std::chrono::system_clock::time_point _startTimestamp;
+        std::chrono::system_clock::time_point _startTimestamp;
 
-    QVector<DataPoint> _points;
-};
+        QVector<DataPoint> _points;
+    };
+}
 
 #endif // RUNWORKER_H

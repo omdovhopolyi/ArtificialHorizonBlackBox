@@ -3,10 +3,12 @@
 
 #include "basemode.h"
 
-class UARTMode : public BaseMode
-{
-public:
-    explicit UARTMode(QObject *parent = nullptr);
-};
+namespace ah {
+    class UARTMode : public BaseMode
+    {
+    public:
+        explicit UARTMode(QObject *parent = nullptr);
+    };
+}
 
 #endif // UARTMODE_H

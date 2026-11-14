@@ -5,19 +5,21 @@
 #include <QSharedPointer>
 #include "basemode.h"
 
-class TestMode : public BaseMode
-{
-public:
-    explicit TestMode(QObject *parent = nullptr);
+namespace ah {
+    class TestMode : public BaseMode
+    {
+    public:
+        explicit TestMode(QObject *parent = nullptr);
 
-    void Start() override;
-    void Stop() override;
+        void Start() override;
+        void Stop() override;
 
-private:
-    void OnTimer();
+    private:
+        void OnTimer();
 
-private:
-    QSharedPointer<QThread> _thread;
-};
+    private:
+        QSharedPointer<QThread> _thread;
+    };
+}
 
 #endif // TESTMODE_H

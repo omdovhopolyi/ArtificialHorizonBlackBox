@@ -8,23 +8,25 @@
 #include <QTextStream>
 #include "../datapoint.h"
 
-class SaveWorker : public QObject
-{
-    Q_OBJECT
-public:
-    explicit SaveWorker(QObject *parent = nullptr);
+namespace ah {
+    class SaveWorker : public QObject
+    {
+        Q_OBJECT
+    public:
+        explicit SaveWorker(QObject *parent = nullptr);
 
-signals:
+    signals:
 
-public slots:
-    void OnStart();
-    void OnStop();
-    void OnDataReceived(DataPoint point);
+    public slots:
+        void OnStart();
+        void OnStop();
+        void OnDataReceived(DataPoint point);
 
-private:
-    QSharedPointer<QTimer> _timer;
-    QFile _file;
-    QTextStream _stream;
-};
+    private:
+        QSharedPointer<QTimer> _timer;
+        QFile _file;
+        QTextStream _stream;
+    };
+}
 
 #endif // SAVEWORKER_H

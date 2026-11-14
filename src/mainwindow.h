@@ -6,7 +6,6 @@
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QValueAxis>
-#include "datapoint.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -14,16 +13,17 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
-class AppConfig;
-class IDataProvider;
-struct DataPoint;
+namespace ah {
+    class AppConfig;
+    struct DataPoint;
+}
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(const AppConfig* config, QWidget *parent = nullptr);
+    MainWindow(const ah::AppConfig* config, QWidget *parent = nullptr);
     ~MainWindow();
 
 signals:
@@ -32,14 +32,14 @@ signals:
     void RunSession(QString filename);
 
 public slots:
-    void OnNewPoint(DataPoint point);
+    void OnNewPoint(ah::DataPoint point);
 
 private:
     void InitSeries();
     void InitGraphicsView();
 
-    void UpdateChart(const DataPoint& point);
-    void UpdateGraphicsView(const DataPoint& point);
+    void UpdateChart(const ah::DataPoint& point);
+    void UpdateGraphicsView(const ah::DataPoint& point);
 
     void OnStartSessionClicked();
     void OnStopSessionClicked();
@@ -50,7 +50,7 @@ private:
 
 private:
     Ui::MainWindow *ui;
-    const AppConfig* _config = nullptr;
+    const ah::AppConfig* _config = nullptr;
 
     QLineSeries* _pitchSeries = nullptr;
     QLineSeries* _rollSeries = nullptr;

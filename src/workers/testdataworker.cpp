@@ -3,32 +3,34 @@
 #include <random>
 #include <chrono>
 
-TestDataWorker::TestDataWorker(QObject *parent)
-    : QObject{parent}
-    , _timer(this)
-{
-    connect(&_timer, &QTimer::timeout, this, &TestDataWorker::OnTimer);
-}
+namespace ah {
+    TestDataWorker::TestDataWorker(QObject *parent)
+        : QObject{parent}
+        , _timer(this)
+    {
+        connect(&_timer, &QTimer::timeout, this, &TestDataWorker::OnTimer);
+    }
 
-void TestDataWorker::OnStart()
-{
-    _timer.start(500);
-    _startTime = std::chrono::system_clock::now();
-}
+    void TestDataWorker::OnStart()
+    {
+        _timer.start(500);
+        _startTime = std::chrono::system_clock::now();
+    }
 
-void TestDataWorker::OnTimer()
-{
-    DataPoint dataPoint;
+    void TestDataWorker::OnTimer()
+    {
+        DataPoint dataPoint;
 
-    std::random_device rd;
-    std::mt19937 mt19937(rd());
-    std::uniform_real_distribution<> dist(0, 30);
+        std::random_device rd;
+        std::mt19937 mt19937(rd());
+        std::uniform_real_distribution<> dist(0, 30);
 
-    dataPoint.pitch = dist(mt19937);
-    dataPoint.roll = dist(mt19937);
+        dataPoint.pitch = dist(mt19937);
+        dataPoint.roll = dist(mt19937);
 
-    auto now = std::chrono::system_clock::now();
-    dataPoint.timestamp = (std::chrono::duration_cast<std::chrono::milliseconds>(now - _startTime).count()) / 1000.f;
+        auto now = std::chrono::system_clock::now();
+        dataPoint.timestamp = (std::chrono::duration_cast<std::chrono::milliseconds>(now - _startTime).count()) / 1000.f;
 
-    emit DataReceived(dataPoint);
+        emit DataReceived(dataPoint);
+    }
 }

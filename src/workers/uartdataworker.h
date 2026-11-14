@@ -4,17 +4,19 @@
 #include <QObject>
 #include "../datapoint.h"
 
-class UARTDataWorker : public QObject
-{
-    Q_OBJECT
-public:
-    explicit UARTDataWorker(QObject *parent = nullptr);
+namespace ah {
+    class UARTDataWorker : public QObject
+    {
+        Q_OBJECT
+    public:
+        explicit UARTDataWorker(QObject *parent = nullptr);
 
-signals:
-    void DataReceived(DataPoint point);
+    signals:
+        void DataReceived(DataPoint point);
 
-public slots:
-    void OnStart();
-};
+    public slots:
+        void OnStart();
+    };
+}
 
 #endif // UARTDATAWORKER_H

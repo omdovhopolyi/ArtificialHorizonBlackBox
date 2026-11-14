@@ -7,38 +7,40 @@
 
 #include "Modes/basemode.h"
 
-class AppConfig;
+namespace ah {
+    class AppConfig;
 
-class MainController
-    : public QObject
-{
-    Q_OBJECT
+    class MainController
+        : public QObject
+    {
+        Q_OBJECT
 
-public:
-    explicit MainController(QObject *parent = nullptr);
+    public:
+        explicit MainController(QObject *parent = nullptr);
 
-    void Init(const AppConfig* config);
+        void Init(const AppConfig* config);
 
-signals:
-    void DataReceived(DataPoint dataPoint);
+    signals:
+        void DataReceived(DataPoint dataPoint);
 
-public slots:
-    void BeforeAppClosed();
+    public slots:
+        void BeforeAppClosed();
 
-    void StartSession();
-    void StopSession();
-    void RunSession(QString filename);
+        void StartSession();
+        void StopSession();
+        void RunSession(QString filename);
 
-private:
-    void InitSessionMode();
-    void InitRunMode(QString filename);
-    void StopSaveThread();
-    void StopCurrentMode();
+    private:
+        void InitSessionMode();
+        void InitRunMode(QString filename);
+        void StopSaveThread();
+        void StopCurrentMode();
 
-private:
-    QSharedPointer<BaseMode> _mode;
-    QSharedPointer<QThread> _saveThread;
-    const AppConfig* _config = nullptr;
-};
+    private:
+        QSharedPointer<BaseMode> _mode;
+        QSharedPointer<QThread> _saveThread;
+        const AppConfig* _config = nullptr;
+    };
+}
 
 #endif // MAINCONTROLLER_H
