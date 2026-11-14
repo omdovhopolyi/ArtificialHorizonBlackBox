@@ -3,7 +3,7 @@
 //#include "uartdatareceiver.h"
 //#include "testdatareceiver.h"
 #include "Modes/testmode.h"
-#include "Modes/savemode.h"
+#include "Modes/runmode.h"
 #include "workers/saveworker.h"
 
 MainController::MainController(QObject *parent)
@@ -19,14 +19,8 @@ void MainController::Init(const AppConfig* config)
 
 void MainController::BeforeAppClosed()
 {
-    if (_saveThread) {
-        _saveThread->exit();
-        _saveThread->wait();
-    }
-
-    if (_mode) {
-        _mode->Stop();
-    }
+    StopSaveThread();
+    StopCurrentMode();
 }
 
 void MainController::StartSession()
@@ -37,9 +31,7 @@ void MainController::StartSession()
     auto saveWorker = new SaveWorker();
     saveWorker->moveToThread(_saveThread.get());
 
-
     connect(_mode.get(), &BaseMode::DataReceived, this, &MainController::DataReceived);
-    //connect(_mode.get(), &BaseMode::DataReceived, &_saveManager, &SaveManager::DataReceived);
 
     connect(_mode.get(), &BaseMode::DataReceived, saveWorker, &SaveWorker::OnDataReceived);
     connect(_saveThread.get(), &QThread::started, saveWorker, &SaveWorker::OnStart);
@@ -66,9 +58,22 @@ void MainController::StopSession()
 
 void MainController::RunSession(QString filename)
 {
+    StopCurrentMode();
+    _mode = QSharedPointer<RunMode>::create();
+    _mode->Start();
+}
+
+void MainController::StopSaveThread()
+{
+    if (_saveThread) {
+        _saveThread->exit();
+        _saveThread->wait();
+    }
+}
+
+void MainController::StopCurrentMode()
+{
     if (_mode) {
         _mode->Stop();
     }
-    _mode = QSharedPointer<SaveMode>::create();
-    _mode->Start();
 }

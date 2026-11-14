@@ -33,6 +33,10 @@ public slots:
     void RunSession(QString filename);
 
 private:
+    void StopSaveThread();
+    void StopCurrentMode();
+
+private:
     QSharedPointer<BaseMode> _mode;
     QSharedPointer<QThread> _saveThread;
     //SaveManager _saveManager;
