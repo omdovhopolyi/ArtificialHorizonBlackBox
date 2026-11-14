@@ -91,8 +91,8 @@ float RunWorker::CalculateTimePassed() const
 
 void RunWorker::EmitReachedPoints(float timestamp)
 {
-    for (int i = _recordIndex; _recordIndex < static_cast<int>(_points.size()); _recordIndex++) {
-        const auto& point = _points[_recordIndex];
+    for (int i = _recordIndex; i < static_cast<int>(_points.size()); i++) {
+        const auto& point = _points[i];
         if (timestamp > point.timestamp) {
             emit PointReached(point);
         }
@@ -105,7 +105,15 @@ void RunWorker::EmitReachedPoints(float timestamp)
 
 void RunWorker::CheckAndLoadNextPage()
 {
-    if (_recordIndex >= static_cast<int>(_points.size())) {
+    if (_points.empty()) {
+        _updateTimer->stop();
+        return;
+    }
+
+    if (_recordIndex >= static_cast<int>(_points.size() - 1)) {
         LoadPage();
+        if (!_file.isOpen()) {
+            _updateTimer->stop();
+        }
     }
 }

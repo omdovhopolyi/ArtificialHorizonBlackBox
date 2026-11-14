@@ -118,19 +118,35 @@ void MainWindow::InitGraphicsView()
 
 void MainWindow::UpdateChart(const DataPoint &point)
 {
-    if (_pitchSeries->count() > _config->GetTimeRange()) {
-        _pitchSeries->remove(0);
-        _rollSeries->remove(0);
+    const auto rangeMax =_axisX->max();
+
+    const bool needMoveTimeRange = (_pitchSeries->count() > 0 && point.timestamp >= rangeMax);
+
+    if (needMoveTimeRange) {
+        _axisX->setRange(rangeMax, rangeMax + _config->GetTimeRange());
+        _pitchSeries->clear();
+        _rollSeries->clear();
     }
+
+    // if (_pitchSeries->count() > _config->GetTimeRange()) {
+    //     _pitchSeries->remove(0);
+    //     _rollSeries->remove(0);
+    // }
 
     _pitchSeries->append(point.timestamp, point.pitch);
     _rollSeries->append(point.timestamp, point.roll);
 
-    const auto& firstPoint = _pitchSeries->points().front();
-    const auto xValueStart = static_cast<int>(firstPoint.x());
-    const auto xValueEnd = xValueStart + _config->GetTimeRange();
+    static int counter = 0;
 
-    _axisX->setRange(xValueStart, xValueEnd);
+    qDebug() << "Points amount: " << _pitchSeries->count() << "; counter: " << counter << ": Timestamp: " << point.timestamp;
+
+    counter++;
+
+    // const auto& firstPoint = _pitchSeries->points().front();
+    // const auto xValueStart = static_cast<int>(firstPoint.x());
+    // const auto xValueEnd = xValueStart + _config->GetTimeRange();
+
+    // _axisX->setRange(xValueStart, xValueEnd);
 }
 
 void MainWindow::UpdateGraphicsView(const DataPoint &point)
@@ -149,6 +165,7 @@ void MainWindow::UpdateGraphicsView(const DataPoint &point)
 
 void MainWindow::OnStartSessionClicked()
 {
+    ClearChart();
     emit StartSession();
 }
 
@@ -159,6 +176,7 @@ void MainWindow::OnStopSessionClicked()
 
 void MainWindow::OnRunSessionClicked()
 {
+    ClearChart();
     QString filename = ui->FileNameView->text();
     emit RunSession(filename);
 }
@@ -170,4 +188,12 @@ void MainWindow::OnSessionSelectorClicked()
         QString filename = QFileInfo(filePath).fileName();
         ui->FileNameView->setText(filename);
     }
+}
+
+void MainWindow::ClearChart()
+{
+    _pitchSeries->clear();
+    _rollSeries->clear();
+
+    _axisX->setRange(0.f, _config->GetTimeRange());
 }

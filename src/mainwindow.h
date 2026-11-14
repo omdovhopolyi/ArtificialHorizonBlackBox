@@ -52,6 +52,8 @@ private:
     void OnRunSessionClicked();
     void OnSessionSelectorClicked();
 
+    void ClearChart();
+
 private:
     Ui::MainWindow *ui;
     const AppConfig* _config = nullptr;
@@ -62,6 +64,8 @@ private:
     QValueAxis* _axisX = nullptr;
     QValueAxis* _axisY = nullptr;
     QChartView* _chartView = nullptr;
+
+    QPointF _currentChartRange;
 
     QGraphicsPixmapItem* _artificialHorizonPixmap = nullptr;
 
