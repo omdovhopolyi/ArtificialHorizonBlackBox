@@ -11,7 +11,14 @@ public:
     int GetTimerDelay() const;
 
     int GetTimeRange() const;
-    int GetValueRange();
+    int GetValueRange() const;
+
+    int PixelsPer10Degrees() const;
+    float GetMaxPitch() const;
+
+    QString GetHorizonBackgroundStatic() const;
+    QString GetHorizonBackgroundDynamic() const;
+    QString GetHorizonTarget() const;
 
     QString GetPitchSeriesName() const;
     QString GetRollSeriesName() const;

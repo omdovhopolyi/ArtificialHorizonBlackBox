@@ -6,7 +6,7 @@
 #include "dataprovider.h"
 #include "appconfig.h"
 
-MainWindow::MainWindow(AppConfig* config, QWidget *parent)
+MainWindow::MainWindow(const AppConfig* config, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , _config(config)
@@ -104,21 +104,16 @@ void MainWindow::InitGraphicsView()
 {
     auto* scene = new QGraphicsScene(this);
 
-    _artificialHorizonPixmap = scene->addPixmap(
-        QPixmap(":/images/assets/ah_back_20.png")
-    );
+    auto backgroundImage = _artificialHorizonPixmap = scene->addPixmap(
+        QPixmap(":/images/assets/" + _config->GetHorizonBackgroundStatic()));
+    backgroundImage->setTransformOriginPoint(backgroundImage->boundingRect().center());
 
-    auto pixmapTarget = scene->addPixmap(QPixmap(":/images/assets/ah_target.png"));
+    _artificialHorizonPixmap = scene->addPixmap(QPixmap(":/images/assets/" + _config->GetHorizonBackgroundDynamic()));
+    _artificialHorizonPixmap->setTransformOriginPoint(_artificialHorizonPixmap->boundingRect().center());
+
+    scene->addPixmap(QPixmap(":/images/assets/" + _config->GetHorizonTarget()));
 
     ui->ArtificialHorizonView->setScene(scene);
-
-    _artificialHorizonPixmap->setTransformOriginPoint(
-        _artificialHorizonPixmap->boundingRect().center()
-    );
-
-    pixmapTarget->setTransformOriginPoint(
-        pixmapTarget->boundingRect().center()
-    );
 }
 
 void MainWindow::UpdateChart(const DataPoint &point)
@@ -140,6 +135,15 @@ void MainWindow::UpdateChart(const DataPoint &point)
 
 void MainWindow::UpdateGraphicsView(const DataPoint &point)
 {
+    const float pitchCorrected = std::min(point.pitch, _config->GetMaxPitch());
+    const float pitch = (_config->PixelsPer10Degrees() * (pitchCorrected / 10.f));
+
+    auto origin =_artificialHorizonPixmap->transformOriginPoint();
+    origin.setY(origin.x() - pitch);
+
+    _artificialHorizonPixmap->setTransformOriginPoint(origin);
+
+    _artificialHorizonPixmap->setPos({ 0.f, pitch });
     _artificialHorizonPixmap->setRotation(point.roll);
 }
 

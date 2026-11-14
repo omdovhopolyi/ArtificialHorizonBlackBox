@@ -25,7 +25,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(AppConfig* config, QWidget *parent = nullptr);
+    MainWindow(const AppConfig* config, QWidget *parent = nullptr);
     ~MainWindow();
 
     void SetDataProvider(const IDataProvider* dataProvider);
@@ -54,7 +54,7 @@ private:
 
 private:
     Ui::MainWindow *ui;
-    AppConfig* _config = nullptr;
+    const AppConfig* _config = nullptr;
 
     QLineSeries* _pitchSeries = nullptr;
     QLineSeries* _rollSeries = nullptr;

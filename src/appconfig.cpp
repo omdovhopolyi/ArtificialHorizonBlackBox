@@ -12,9 +12,34 @@ int AppConfig::GetTimeRange() const
     return 10;
 }
 
-int AppConfig::GetValueRange()
+int AppConfig::GetValueRange() const
 {
     return 90;
+}
+
+int AppConfig::PixelsPer10Degrees() const
+{
+    return 75;
+}
+
+float AppConfig::GetMaxPitch() const
+{
+    return 25.f;
+}
+
+QString AppConfig::GetHorizonBackgroundStatic() const
+{
+    return "ah_back_20.png";
+}
+
+QString AppConfig::GetHorizonBackgroundDynamic() const
+{
+    return "ah_back_20.png";
+}
+
+QString AppConfig::GetHorizonTarget() const
+{
+    return "ah_target.png";
 }
 
 QString AppConfig::GetPitchSeriesName() const

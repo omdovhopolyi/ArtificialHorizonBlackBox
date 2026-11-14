@@ -12,7 +12,7 @@ TestDataWorker::TestDataWorker(QObject *parent)
 
 void TestDataWorker::OnStart()
 {
-    _timer.start(100);
+    _timer.start(500);
     _startTime = std::chrono::system_clock::now();
 }
 
