@@ -3,7 +3,6 @@
 #include <QVBoxLayout>
 #include <QFileDialog>
 
-#include "dataprovider.h"
 #include "appconfig.h"
 
 MainWindow::MainWindow(const AppConfig* config, QWidget *parent)
@@ -18,11 +17,6 @@ MainWindow::MainWindow(const AppConfig* config, QWidget *parent)
     InitSeries();
     InitGraphicsView();
 
-    //_debugTimer.start(100);
-
-    //connect(&_debugTimer, &QTimer::timeout, this, &MainWindow::OnDebugTimer);
-
-    // TODO signal forwarding
     connect(ui->StartSessonButton, &QPushButton::released, this, &MainWindow::OnStartSessionClicked);
     connect(ui->StopSessionButton, &QPushButton::released, this, &MainWindow::OnStopSessionClicked);
     connect(ui->RunSessionButton, &QPushButton::released, this, &MainWindow::OnRunSessionClicked);
@@ -34,35 +28,10 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::SetDataProvider(const IDataProvider *dataProvider)
-{
-    _dataProvider = dataProvider;
-}
-
 void MainWindow::OnNewPoint(DataPoint point)
 {
     UpdateChart(point);
     UpdateGraphicsView(point);
-}
-
-void MainWindow::OnDataUpdated()
-{
-    // if (_dataProvider) {
-    //     const auto& dataPoints = _dataProvider->GetData();
-    //     if (!dataPoints.empty()) {
-    //         const auto& lastPoint = dataPoints.back();
-
-    //         UpdateChart(lastPoint);
-    //         UpdateGraphicsView(lastPoint);
-    //     }
-    // }
-}
-
-void MainWindow::OnDebugTimer()
-{
-    auto rotation = _artificialHorizonPixmap->rotation();
-    rotation += 1.f;
-    _artificialHorizonPixmap->setRotation(rotation);
 }
 
 void MainWindow::InitSeries()
@@ -119,7 +88,6 @@ void MainWindow::InitGraphicsView()
 void MainWindow::UpdateChart(const DataPoint &point)
 {
     const auto rangeMax =_axisX->max();
-
     const bool needMoveTimeRange = (_pitchSeries->count() > 0 && point.timestamp >= rangeMax);
 
     if (needMoveTimeRange) {
@@ -128,25 +96,8 @@ void MainWindow::UpdateChart(const DataPoint &point)
         _rollSeries->clear();
     }
 
-    // if (_pitchSeries->count() > _config->GetTimeRange()) {
-    //     _pitchSeries->remove(0);
-    //     _rollSeries->remove(0);
-    // }
-
     _pitchSeries->append(point.timestamp, point.pitch);
     _rollSeries->append(point.timestamp, point.roll);
-
-    static int counter = 0;
-
-    qDebug() << "Points amount: " << _pitchSeries->count() << "; counter: " << counter << ": Timestamp: " << point.timestamp;
-
-    counter++;
-
-    // const auto& firstPoint = _pitchSeries->points().front();
-    // const auto xValueStart = static_cast<int>(firstPoint.x());
-    // const auto xValueEnd = xValueStart + _config->GetTimeRange();
-
-    // _axisX->setRange(xValueStart, xValueEnd);
 }
 
 void MainWindow::UpdateGraphicsView(const DataPoint &point)

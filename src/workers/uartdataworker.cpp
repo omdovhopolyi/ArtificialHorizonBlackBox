@@ -1,7 +1,7 @@
 #include "uartdataworker.h"
 
 UARTDataWorker::UARTDataWorker(QObject *parent)
-    : DataWorker{parent}
+    : QObject{parent}
 {}
 
 void UARTDataWorker::OnStart()

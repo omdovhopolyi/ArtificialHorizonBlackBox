@@ -2,7 +2,6 @@
 #define RUNMODE_H
 
 #include "basemode.h"
-#include "../datapoint.h"
 #include <QSharedPointer>
 #include <QThread>
 

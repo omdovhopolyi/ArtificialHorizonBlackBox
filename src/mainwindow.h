@@ -6,9 +6,7 @@
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QValueAxis>
-#include <QSharedPointer>
-
-#include <QTimer>
+#include "datapoint.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -28,8 +26,6 @@ public:
     MainWindow(const AppConfig* config, QWidget *parent = nullptr);
     ~MainWindow();
 
-    void SetDataProvider(const IDataProvider* dataProvider);
-
 signals:
     void StartSession();
     void StopSession();
@@ -37,8 +33,6 @@ signals:
 
 public slots:
     void OnNewPoint(DataPoint point);
-    void OnDataUpdated();
-    void OnDebugTimer();
 
 private:
     void InitSeries();
@@ -68,9 +62,5 @@ private:
     QPointF _currentChartRange;
 
     QGraphicsPixmapItem* _artificialHorizonPixmap = nullptr;
-
-    const IDataProvider* _dataProvider = nullptr;
-
-    QTimer _debugTimer;
 };
 #endif // MAINWINDOW_H

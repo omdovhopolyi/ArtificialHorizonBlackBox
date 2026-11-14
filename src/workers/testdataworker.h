@@ -1,19 +1,22 @@
 #ifndef TESTDATAWORKER_H
 #define TESTDATAWORKER_H
 
-#include "dataworker.h"
-
+#include <QObject>
 #include <QTimer>
 #include <chrono>
+#include "../datapoint.h"
 
-class TestDataWorker : public DataWorker
+class TestDataWorker : public QObject
 {
     Q_OBJECT
 public:
     explicit TestDataWorker(QObject *parent = nullptr);
 
+signals:
+    void DataReceived(DataPoint point);
+
 public slots:
-    void OnStart() override;
+    void OnStart();
     void OnTimer();
 
 private:

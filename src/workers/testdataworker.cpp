@@ -4,7 +4,7 @@
 #include <chrono>
 
 TestDataWorker::TestDataWorker(QObject *parent)
-    : DataWorker{parent}
+    : QObject{parent}
     , _timer(this)
 {
     connect(&_timer, &QTimer::timeout, this, &TestDataWorker::OnTimer);

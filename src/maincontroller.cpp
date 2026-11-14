@@ -1,7 +1,5 @@
 #include "maincontroller.h"
 #include "appconfig.h"
-//#include "uartdatareceiver.h"
-//#include "testdatareceiver.h"
 #include "Modes/testmode.h"
 #include "Modes/runmode.h"
 #include "workers/saveworker.h"
@@ -14,7 +12,6 @@ void MainController::Init(const AppConfig* config)
 {
     Q_ASSERT(config);
     _config = config;
-    //_saveManager.Init(this);
 }
 
 void MainController::BeforeAppClosed()

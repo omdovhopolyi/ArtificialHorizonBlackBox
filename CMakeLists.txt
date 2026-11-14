@@ -24,13 +24,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         src/maincontroller.h src/maincontroller.cpp
-        src/savemanager.h src/savemanager.cpp
         src/datapoint.h
-
-        src/dataprovider.h
-        src/uartdatareceiver.h src/uartdatareceiver.cpp
         src/appconfig.h src/appconfig.cpp
-        src/workers/dataworker.h src/workers/dataworker.cpp
         src/workers/uartdataworker.h src/workers/uartdataworker.cpp
         src/workers/testdataworker.h src/workers/testdataworker.cpp
         resources.qrc

@@ -1,15 +1,20 @@
 #ifndef UARTDATAWORKER_H
 #define UARTDATAWORKER_H
 
-#include "dataworker.h"
+#include <QObject>
+#include "../datapoint.h"
 
-class UARTDataWorker : public DataWorker
+class UARTDataWorker : public QObject
 {
+    Q_OBJECT
 public:
     explicit UARTDataWorker(QObject *parent = nullptr);
 
+signals:
+    void DataReceived(DataPoint point);
+
 public slots:
-    void OnStart() override;
+    void OnStart();
 };
 
 #endif // UARTDATAWORKER_H
