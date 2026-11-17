@@ -16,6 +16,8 @@ namespace ah {
         connect(_thread, &QThread::finished, worker, &QObject::deleteLater);
 
         connect(worker, &UARTDataWorker::DataReceived, this, &UARTMode::DataReceived);
+
+        _thread->start();
     }
 
     void UARTMode::Stop()

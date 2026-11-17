@@ -2,6 +2,7 @@
 #define UARTDATAWORKER_H
 
 #include <QObject>
+#include <QSerialPort>
 #include "../datapoint.h"
 
 namespace ah {
@@ -16,6 +17,15 @@ namespace ah {
 
     public slots:
         void OnStart();
+
+    private slots:
+        void OnReadyRead();
+
+    private:
+        void ListSerialPorts();
+
+    private:
+        QSerialPort _serialPort;
     };
 }
 

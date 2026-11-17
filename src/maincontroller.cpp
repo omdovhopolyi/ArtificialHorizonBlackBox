@@ -1,6 +1,7 @@
 #include "maincontroller.h"
 #include "appconfig.h"
 #include "Modes/testmode.h"
+#include "Modes/uartmode.h"
 #include "Modes/runmode.h"
 #include "workers/saveworker.h"
 
@@ -49,7 +50,7 @@ namespace ah {
 
     void MainController::InitSessionMode()
     {
-        _mode = QSharedPointer<TestMode>::create();
+        _mode = QSharedPointer<UARTMode>::create();
 
         _saveThread = QSharedPointer<QThread>::create();
         auto saveWorker = new SaveWorker();

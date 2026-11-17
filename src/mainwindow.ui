@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>903</width>
-    <height>445</height>
+    <height>476</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,7 +29,7 @@
        <x>-1</x>
        <y>-1</y>
        <width>561</width>
-       <height>391</height>
+       <height>431</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="ChartLayout"/>
@@ -50,7 +50,7 @@
        <x>0</x>
        <y>0</y>
        <width>301</width>
-       <height>391</height>
+       <height>431</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -67,6 +67,23 @@
         </property>
         <property name="interactive">
          <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QComboBox" name="PortsCombobox"/>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QLabel" name="ConnectionLabel">
+        <property name="text">
+         <string>Not connected</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
