@@ -5,6 +5,12 @@
 #include <QSerialPort>
 #include "../datapoint.h"
 
+struct TelemetryData {
+    float pitch = 0.f;
+    float roll = 0.f;
+    unsigned long timestamp = 0L;
+};
+
 namespace ah {
     class UARTDataWorker : public QObject
     {
@@ -26,6 +32,7 @@ namespace ah {
 
     private:
         QSerialPort _serialPort;
+        QByteArray _buffer;
     };
 }
 

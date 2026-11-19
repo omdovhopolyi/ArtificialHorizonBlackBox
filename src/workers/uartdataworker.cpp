@@ -5,6 +5,8 @@
 #include <QDebug>
 
 namespace ah {
+    static constexpr int PacketSize = sizeof(TelemetryData);
+
     UARTDataWorker::UARTDataWorker(QObject *parent)
         : QObject{parent}
     {}
@@ -13,7 +15,8 @@ namespace ah {
     {
         ListSerialPorts();
 
-        _serialPort.setPortName("/dev/ttyUSB0");
+        //_serialPort.setPortName("/dev/ttyUSB0");
+        _serialPort.setPortName("COM5");
         _serialPort.setBaudRate(QSerialPort::Baud115200);
         _serialPort.setDataBits(QSerialPort::Data8);
         _serialPort.setParity(QSerialPort::NoParity);
@@ -30,11 +33,25 @@ namespace ah {
 
     void UARTDataWorker::OnReadyRead()
     {
-        QByteArray data = _serialPort.readAll();
-        QTextStream stream(&data);
-        QString str = stream.readAll();
-        _serialPort.clear();
-        qDebug() << str;
+        _buffer.append(_serialPort.readAll());
+
+        const bool hasPacket = (_buffer.size() >= PacketSize);
+
+        TelemetryData telemetryData;
+
+        if (hasPacket) {
+            memcpy(&telemetryData, _buffer.constData(), PacketSize);
+            _buffer.remove(0, PacketSize);
+
+            qDebug() << telemetryData.pitch << " " << telemetryData.roll << " " << telemetryData.timestamp;
+
+            DataPoint point;
+            point.pitch = telemetryData.pitch;
+            point.roll = telemetryData.roll;
+            point.timestamp = telemetryData.timestamp / 1000.f;
+
+            emit DataReceived(point);
+        }
     }
 
     void UARTDataWorker::ListSerialPorts()
