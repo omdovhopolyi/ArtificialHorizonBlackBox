@@ -2,6 +2,8 @@
 #include "./ui_mainwindow.h"
 #include <QVBoxLayout>
 #include <QFileDialog>
+#include <QSerialPortInfo>
+#include <QSerialPortInfo>
 
 #include "appconfig.h"
 #include "datapoint.h"
@@ -17,11 +19,13 @@ MainWindow::MainWindow(const ah::AppConfig* config, QWidget *parent)
 
     InitSeries();
     InitGraphicsView();
+    InitPortsCombobox();
 
     connect(ui->StartSessonButton, &QPushButton::released, this, &MainWindow::OnStartSessionClicked);
     connect(ui->StopSessionButton, &QPushButton::released, this, &MainWindow::OnStopSessionClicked);
     connect(ui->RunSessionButton, &QPushButton::released, this, &MainWindow::OnRunSessionClicked);
     connect(ui->ChooseFileButton, &QPushButton::released, this, &MainWindow::OnSessionSelectorClicked);
+    connect(ui->PortsRefresh, &QPushButton::clicked, this, &MainWindow::OnRefreshPorts);
 }
 
 MainWindow::~MainWindow()
@@ -52,7 +56,7 @@ void MainWindow::InitSeries()
     _axisX->setTitleText(_config->GetTimeAxisName());
 
     _axisY = new QValueAxis();
-    _axisY->setRange(0, _config->GetValueRange());
+    _axisY->setRange(_config->GetValueMin(), _config->GetValueMax());
     _axisY->setTitleText(_config->GetValueAxisName());
 
     _chart->addAxis(_axisX, Qt::AlignBottom);
@@ -86,6 +90,17 @@ void MainWindow::InitGraphicsView()
     ui->ArtificialHorizonView->setScene(scene);
 }
 
+void MainWindow::InitPortsCombobox()
+{
+    ui->PortsCombobox->clear();
+
+    const auto ports = QSerialPortInfo::availablePorts();
+
+    for (const auto& port : ports) {
+        ui->PortsCombobox->addItem(port.portName());
+    }
+}
+
 void MainWindow::UpdateChart(const ah::DataPoint &point)
 {
     const auto rangeMax =_axisX->max();
@@ -103,8 +118,8 @@ void MainWindow::UpdateChart(const ah::DataPoint &point)
 
 void MainWindow::UpdateGraphicsView(const ah::DataPoint &point)
 {
-    const float pitchCorrected = std::min(point.pitch, _config->GetMaxPitch());
-    const float pitch = (_config->PixelsPer10Degrees() * (pitchCorrected / 10.f));
+    const float pitchClamped = std::clamp(point.pitch, -_config->GetMaxPitch(), _config->GetMaxPitch());
+    const float pitch = (_config->PixelsPer10Degrees() * (pitchClamped / 10.f));
 
     auto origin =_artificialHorizonPixmap->transformOriginPoint();
     origin.setY(origin.x() - pitch);
@@ -118,7 +133,8 @@ void MainWindow::UpdateGraphicsView(const ah::DataPoint &point)
 void MainWindow::OnStartSessionClicked()
 {
     ClearChart();
-    emit StartSession();
+    const QString port = ui->PortsCombobox->currentText();
+    emit StartSession(port);
 }
 
 void MainWindow::OnStopSessionClicked()
@@ -129,7 +145,7 @@ void MainWindow::OnStopSessionClicked()
 void MainWindow::OnRunSessionClicked()
 {
     ClearChart();
-    QString filename = ui->FileNameView->text();
+    const QString filename = ui->FileNameView->text();
     emit RunSession(filename);
 }
 
@@ -140,6 +156,11 @@ void MainWindow::OnSessionSelectorClicked()
         QString filename = QFileInfo(filePath).fileName();
         ui->FileNameView->setText(filename);
     }
+}
+
+void MainWindow::OnRefreshPorts()
+{
+    InitPortsCombobox();
 }
 
 void MainWindow::ClearChart()

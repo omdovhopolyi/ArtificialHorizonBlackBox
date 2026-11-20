@@ -13,7 +13,12 @@ namespace ah {
         return 10;
     }
 
-    int AppConfig::GetValueRange() const
+    int AppConfig::GetValueMin() const
+    {
+        return -90;
+    }
+
+    int AppConfig::GetValueMax() const
     {
         return 90;
     }

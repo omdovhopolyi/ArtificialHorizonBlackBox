@@ -16,7 +16,7 @@ namespace ah {
     {
         Q_OBJECT
     public:
-        explicit UARTDataWorker(QObject *parent = nullptr);
+        explicit UARTDataWorker(QString port, QObject *parent = nullptr);
 
     signals:
         void DataReceived(DataPoint point);
@@ -28,10 +28,8 @@ namespace ah {
         void OnReadyRead();
 
     private:
-        void ListSerialPorts();
-
-    private:
         QSerialPort _serialPort;
+        QString _portId;
         QByteArray _buffer;
     };
 }

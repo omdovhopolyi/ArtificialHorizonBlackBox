@@ -1,6 +1,6 @@
 #include "maincontroller.h"
 #include "appconfig.h"
-#include "Modes/testmode.h"
+//#include "Modes/testmode.h"
 #include "Modes/uartmode.h"
 #include "Modes/runmode.h"
 #include "workers/saveworker.h"
@@ -22,11 +22,11 @@ namespace ah {
         StopCurrentMode();
     }
 
-    void MainController::StartSession()
+    void MainController::StartSession(QString portId)
     {
         StopSaveThread();
         StopCurrentMode();
-        InitSessionMode();
+        InitSessionMode(portId);
     }
 
     void MainController::StopSession()
@@ -48,9 +48,9 @@ namespace ah {
         InitRunMode(filename);
     }
 
-    void MainController::InitSessionMode()
+    void MainController::InitSessionMode(QString portId)
     {
-        _mode = QSharedPointer<UARTMode>::create();
+        _mode = QSharedPointer<UARTMode>::create(portId);
 
         _saveThread = QSharedPointer<QThread>::create();
         auto saveWorker = new SaveWorker();

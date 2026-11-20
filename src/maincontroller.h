@@ -26,12 +26,12 @@ namespace ah {
     public slots:
         void BeforeAppClosed();
 
-        void StartSession();
+        void StartSession(QString portId);
         void StopSession();
         void RunSession(QString filename);
 
     private:
-        void InitSessionMode();
+        void InitSessionMode(QString portId);
         void InitRunMode(QString filename);
         void StopSaveThread();
         void StopCurrentMode();

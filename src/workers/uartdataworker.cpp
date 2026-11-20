@@ -7,16 +7,15 @@
 namespace ah {
     static constexpr int PacketSize = sizeof(TelemetryData);
 
-    UARTDataWorker::UARTDataWorker(QObject *parent)
+    UARTDataWorker::UARTDataWorker(QString port, QObject *parent)
         : QObject{parent}
+        , _portId(port)
     {}
 
     void UARTDataWorker::OnStart()
     {
-        ListSerialPorts();
-
         //_serialPort.setPortName("/dev/ttyUSB0");
-        _serialPort.setPortName("COM5");
+        _serialPort.setPortName(_portId);
         _serialPort.setBaudRate(QSerialPort::Baud115200);
         _serialPort.setDataBits(QSerialPort::Data8);
         _serialPort.setParity(QSerialPort::NoParity);
@@ -51,18 +50,6 @@ namespace ah {
             point.timestamp = telemetryData.timestamp / 1000.f;
 
             emit DataReceived(point);
-        }
-    }
-
-    void UARTDataWorker::ListSerialPorts()
-    {
-        const auto ports = QSerialPortInfo::availablePorts();
-
-        for (const auto& port : ports) {
-            qDebug() << port.portName();
-            qDebug() << port.description();
-            qDebug() << port.systemLocation();
-            qDebug() << "\n";
         }
     }
 }

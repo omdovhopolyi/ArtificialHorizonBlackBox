@@ -12,7 +12,8 @@ namespace ah {
         int GetTimerDelay() const;
 
         int GetTimeRange() const;
-        int GetValueRange() const;
+        int GetValueMin() const;
+        int GetValueMax() const;
 
         int PixelsPer10Degrees() const;
         float GetMaxPitch() const;

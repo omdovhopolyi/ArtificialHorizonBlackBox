@@ -2,14 +2,15 @@
 #include "../workers/uartdataworker.h"
 
 namespace ah {
-    UARTMode::UARTMode(QObject *parent)
+    UARTMode::UARTMode(QString portId, QObject *parent)
         : BaseMode{parent}
+        , _portId(portId)
     {}
 
     void UARTMode::Start()
     {
         _thread = new QThread(this);
-        auto worker = new UARTDataWorker();
+        auto worker = new UARTDataWorker(_portId);
         worker->moveToThread(_thread);
 
         connect(_thread, &QThread::started, worker, &UARTDataWorker::OnStart);

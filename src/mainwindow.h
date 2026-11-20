@@ -27,7 +27,7 @@ public:
     ~MainWindow();
 
 signals:
-    void StartSession();
+    void StartSession(QString port);
     void StopSession();
     void RunSession(QString filename);
 
@@ -37,6 +37,7 @@ public slots:
 private:
     void InitSeries();
     void InitGraphicsView();
+    void InitPortsCombobox();
 
     void UpdateChart(const ah::DataPoint& point);
     void UpdateGraphicsView(const ah::DataPoint& point);
@@ -45,6 +46,7 @@ private:
     void OnStopSessionClicked();
     void OnRunSessionClicked();
     void OnSessionSelectorClicked();
+    void OnRefreshPorts();
 
     void ClearChart();
 
