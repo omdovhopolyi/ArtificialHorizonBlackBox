@@ -19,18 +19,18 @@ namespace ah {
         if (_thread) {
             _thread->quit();
             _thread->wait();
-            _thread.reset();
         }
     }
 
     void RunMode::InitThread()
     {
-        _thread = QSharedPointer<QThread>::create();
+        //_thread = QSharedPointer<QThread>::create();
+        _thread = new QThread(this);
         auto worker = new RunWorker(_filename, _config);
-        worker->moveToThread(_thread.get());
+        worker->moveToThread(_thread);
 
-        connect(_thread.get(), &QThread::started, worker, &RunWorker::OnStart);
-        connect(_thread.get(), &QThread::finished, worker, &QObject::deleteLater);
+        connect(_thread, &QThread::started, worker, &RunWorker::OnStart);
+        connect(_thread, &QThread::finished, worker, &QObject::deleteLater);
 
         connect(worker, &RunWorker::PointReached, this, &RunMode::DataReceived);
 

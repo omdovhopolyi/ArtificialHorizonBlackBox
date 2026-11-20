@@ -21,7 +21,8 @@ namespace ah {
         void InitThread();
 
     private:
-        QSharedPointer<QThread> _thread;
+        //QSharedPointer<QThread> _thread;
+        QThread* _thread = nullptr;
         QString _filename;
         const AppConfig* _config = nullptr;
     };

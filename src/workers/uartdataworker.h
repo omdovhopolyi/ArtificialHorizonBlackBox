@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QSerialPort>
+#include <QSharedPointer>
 #include "../datapoint.h"
 
 struct TelemetryData {
@@ -28,7 +29,7 @@ namespace ah {
         void OnReadyRead();
 
     private:
-        QSerialPort _serialPort;
+        QSharedPointer<QSerialPort> _serialPort;
         QString _portId;
         QByteArray _buffer;
     };

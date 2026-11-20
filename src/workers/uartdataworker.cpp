@@ -14,25 +14,26 @@ namespace ah {
 
     void UARTDataWorker::OnStart()
     {
-        //_serialPort.setPortName("/dev/ttyUSB0");
-        _serialPort.setPortName(_portId);
-        _serialPort.setBaudRate(QSerialPort::Baud115200);
-        _serialPort.setDataBits(QSerialPort::Data8);
-        _serialPort.setParity(QSerialPort::NoParity);
-        _serialPort.setStopBits(QSerialPort::OneStop);
-        _serialPort.setFlowControl(QSerialPort::NoFlowControl);
+        _serialPort = QSharedPointer<QSerialPort>::create();
 
-        if (!_serialPort.open(QIODevice::ReadOnly))
+        _serialPort->setPortName(_portId);
+        _serialPort->setBaudRate(QSerialPort::Baud115200);
+        _serialPort->setDataBits(QSerialPort::Data8);
+        _serialPort->setParity(QSerialPort::NoParity);
+        _serialPort->setStopBits(QSerialPort::OneStop);
+        _serialPort->setFlowControl(QSerialPort::NoFlowControl);
+
+        if (!_serialPort->open(QIODevice::ReadOnly))
         {
-            qDebug() << _serialPort.errorString();
+            qDebug() << _serialPort->errorString();
         }
 
-        connect(&_serialPort, &QSerialPort::readyRead, this, &UARTDataWorker::OnReadyRead);
+        connect(_serialPort.get(), &QSerialPort::readyRead, this, &UARTDataWorker::OnReadyRead);
     }
 
     void UARTDataWorker::OnReadyRead()
     {
-        _buffer.append(_serialPort.readAll());
+        _buffer.append(_serialPort->readAll());
 
         const bool hasPacket = (_buffer.size() >= PacketSize);
 
